@@ -1,0 +1,19 @@
+table {
+	border: 1px solid black;
+	width: 100px;
+}
+
+table > tbody > tr > td{
+	border: 1px solid black !important;
+	font-size: 0.7em;
+	padding: 0.4em;
+}
+
+table > thead > tr > th{
+	text-align: center !important;
+	color: white;
+	font-weight: 600;
+	background: green;
+	font-size: 0.7em;
+	padding: 0.6em;
+}

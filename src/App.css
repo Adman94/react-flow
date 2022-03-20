@@ -1,0 +1,17 @@
+.App {
+  height: 100vh;
+  width: 100vw;
+}
+
+.btn-add{
+  position: absolute;
+  right: 50px;
+  bottom: 190px;
+  z-index: 10;
+  padding: 0.6em 1.7em;
+  border: none;
+  text-transform: uppercase;
+  background: green;
+  color: white;
+  cursor: pointer;
+}

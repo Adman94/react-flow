@@ -1,0 +1,103 @@
+.add__node{
+	position: fixed;
+	right: 0;
+	height: 100vh;
+	background: white;
+	width: 100%;
+	max-width: 400px;
+	z-index: 1000;
+	top: 0;
+	padding: 1em 2em;
+}
+
+.add__node .container{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.add__node .container span{
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	font-weight: 500;
+	font-size: 1.2em;
+	color: white;
+	background: black;
+	height: 30px;
+	width: 30px;
+	display: grid;
+	place-content: center;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.add__node .container p{
+	color: white;
+	background: red;
+	padding: 1em;
+	width: 100%;
+	text-align: center;
+	border-radius: 5px;
+}
+
+.add__node h1{
+	color: #344055;
+	text-align: center;
+	font-family: sans-serif;
+}
+
+.add__node form{
+	margin-top: 1em;
+}
+
+.add__node form label{
+	display: block;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+	font-weight: 500;
+	color: #6E7C96;
+}
+
+.add__node form input{
+	width: 100%;
+	padding: 1em;
+	outline: none;
+	border-radius: 5px;
+	border: 1px solid #CECED6;
+}
+
+.add__node form .input__row{
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	margin-bottom: 1.5em;
+}
+
+.add__node form button{
+	display: block;
+	width: 100%;
+	padding: 0.8em;
+	margin-bottom: 0.7em;
+	cursor: pointer;
+	border-radius: 5px;
+	border: 1px solid #CECED6;
+}
+
+.add__node .preview{
+	width: 100%;
+	background: #CECED6;
+	height: 100%;
+	flex: 1em;
+	margin-top: 1em;
+	overflow: auto;
+}
+
+.add__node .preview table{
+	width: 100%;
+}
+
+.add__node .preview table th, .add__node .preview table td{
+	padding: 1em;
+	font-size: 1em;
+}
