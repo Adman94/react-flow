@@ -4,21 +4,30 @@ import { v4 as uuidv4 } from 'uuid';
 import ReactFlow, { useReactFlow, useNodes, useEdges } from 'react-flow-renderer';
 import { createNewNode } from '../actions/nodes'
 import { createNewEdge } from '../actions/edges'
+import { useDispatch, useSelector } from 'react-redux'
+import { hideForm } from '../actions/form'
 
-const AddNodeForm = ({setShowForm}) => {
+const AddNodeForm = () => {
 	const [title, setTitle] = useState('');
 	const [options, setOptions] = useState([]);
 	const [unit, setUnit] = useState('');
 	const [range, setRange] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [updateNodeData, setUpdateNodeData] = useState(false)
 	const nodes = useNodes();
   const edges = useEdges();
 	const reactFlowInstance = useReactFlow();
+	const dispatch = useDispatch();
+	const stateNodes = useSelector(state => state.nodes);
+	const formState = useSelector(state => state.form);
 
 	useEffect(() => {
-		createNewNode(nodes)
-    createNewEdge(edges)
-  }, [nodes, edges]);
+		if(formState.title){
+			setTitle(formState.title);
+			setOptions(formState.options);
+			setUpdateNodeData(true)
+		}
+  }, []);
 
  const showError = (message) => {
  	setErrorMessage(message);
@@ -50,7 +59,20 @@ const AddNodeForm = ({setShowForm}) => {
   		showError('Please create a value pair')
   	}
   	else{
-  		const newNode = {
+  		if(updateNodeData){
+  			const nodeIndex = stateNodes.findIndex((node)=> node.id == formState.id);
+
+  			stateNodes[nodeIndex].title = title;
+  			stateNodes[nodeIndex].options = options
+
+  			console.log(stateNodes)
+  			dispatch(createNewNode(stateNodes));
+  			setOptions([]);
+	    	setTitle('');
+	    	setUpdateNodeData(false);
+	    	dispatch(hideForm())
+  		}else{
+  			const newNode = {
 	      id: uuidv4(),
 	      position: {
 	        x: Math.random() * 100,
@@ -63,16 +85,18 @@ const AddNodeForm = ({setShowForm}) => {
 	      type: 'table',
 	    };
 	    reactFlowInstance.addNodes(newNode);
+	    dispatch(createNewNode([...stateNodes, newNode]));
 	    setOptions([]);
 	    setTitle('');
+  		}
   	}
   }
 
 	return (
 		<div className="add__node">
 			<div className="container">
-				<h1>Add Table</h1>
-				<span onClick={()=> setShowForm(false)}>X</span>
+				<h1>{!updateNodeData ? 'Add Table' : 'Update Table'}</h1>
+				<span onClick={()=> dispatch(hideForm())}>X</span>
 				{errorMessage &&
 					<p className="error__message">{errorMessage}</p>
 				}
@@ -100,7 +124,7 @@ const AddNodeForm = ({setShowForm}) => {
 						/>
 					</div>
 					<button onClick={createNewPair}>Add Pair</button>
-					<button type="submit">Create Table</button>
+					<button type="submit">{!updateNodeData ? 'Create Table' : 'Update Table'}</button>
 				</form>
 				<div className="preview">
 					{

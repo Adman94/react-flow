@@ -2,14 +2,15 @@ import React, {Fragment, useState} from 'react'
 import Flow from './Flow'
 import ReactFlow, { ReactFlowProvider } from 'react-flow-renderer';
 import AddNodeForm from './AddNodeForm'
+import {useSelector} from 'react-redux'
 
 const Home = () => {
-	const [showForm, setShowForm] = useState(false);
+	const form = useSelector(state => state.form);
 	return (
 		<Fragment>
 			<ReactFlowProvider>
-	      <Flow setShowForm={setShowForm} />
-	      {showForm && <AddNodeForm setShowForm={setShowForm} />}
+	      <Flow />
+	      {form.show && <AddNodeForm />}
 	    </ReactFlowProvider>
 		</Fragment>
 	)

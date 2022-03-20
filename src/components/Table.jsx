@@ -1,12 +1,21 @@
 import React, {Fragment} from 'react';
 import "./Table.css"
 import { Handle, Position } from 'react-flow-renderer';
+import {useDispatch} from 'react-redux'
+import {updateNodeData} from '../actions/form'
 
-const Table = ({data}) => {
+const Table = ({id, data}) => {
+	const dispatch = useDispatch();
+
+	const handleContextMenu = (e) => {
+		e.preventDefault();
+		dispatch(updateNodeData(id, data.title, data.options))
+	}
+
 	return (
 		<Fragment>
 			<Handle type="target" position={Position.Top}  />
-			<table>
+			<table onContextMenu={handleContextMenu}>
 				<thead>
 					<tr>
 						<th colSpan="2">{data.title}</th>
