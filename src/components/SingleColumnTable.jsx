@@ -4,11 +4,11 @@ import { Handle, Position } from 'react-flow-renderer';
 import {useDispatch} from 'react-redux'
 import {updateNodeData} from '../actions/form'
 
-const TwoColumnTable = ({id, data, type}) => {
+const SingleColumnTable = ({id, data, type}) => {
 	const dispatch = useDispatch();
 	const handleContextMenu = (e) => {
 		e.preventDefault();
-		dispatch(updateNodeData(id, data.title, data.options, data.headers, type))
+		dispatch(updateNodeData(id, data.title, data.options, [], type))
 	}
 
 	return (
@@ -17,22 +17,14 @@ const TwoColumnTable = ({id, data, type}) => {
 			<table onContextMenu={handleContextMenu}>
 				<thead>
 					<tr>
-						<th colSpan="2" style={{background: '#004F2D'}}>{data.title}</th>
-					</tr>
-					<tr>
-						{
-							data.headers.map((header, i) => (
-								<th key={header + "" + 1}>{header}</th>
-							))
-						}
+						<th style={{background: '#004F2D'}}>{data.title}</th>
 					</tr>
 				</thead>
 				<tbody>
 					{
 						data.options.map((option, i) => (
-							<tr key={option[0] + "" + i}>
-								<td>{option[0]}</td>
-								<td>{option[1]}</td>
+							<tr key={option + "" + i}>
+								<td>{option}</td>
 							</tr>
 						))
 					}
@@ -45,4 +37,4 @@ const TwoColumnTable = ({id, data, type}) => {
 		)
 }
 
-export default TwoColumnTable
+export default SingleColumnTable

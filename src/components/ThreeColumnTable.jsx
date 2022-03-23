@@ -4,7 +4,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import {useDispatch} from 'react-redux'
 import {updateNodeData} from '../actions/form'
 
-const TwoColumnTable = ({id, data, type}) => {
+const ThreeColumnTable = ({id, data, type}) => {
 	const dispatch = useDispatch();
 	const handleContextMenu = (e) => {
 		e.preventDefault();
@@ -17,7 +17,7 @@ const TwoColumnTable = ({id, data, type}) => {
 			<table onContextMenu={handleContextMenu}>
 				<thead>
 					<tr>
-						<th colSpan="2" style={{background: '#004F2D'}}>{data.title}</th>
+						<th colSpan="3" style={{background: '#004F2D'}}>{data.title}</th>
 					</tr>
 					<tr>
 						{
@@ -33,6 +33,7 @@ const TwoColumnTable = ({id, data, type}) => {
 							<tr key={option[0] + "" + i}>
 								<td>{option[0]}</td>
 								<td>{option[1]}</td>
+								<td>{option[2]}</td>
 							</tr>
 						))
 					}
@@ -45,4 +46,4 @@ const TwoColumnTable = ({id, data, type}) => {
 		)
 }
 
-export default TwoColumnTable
+export default ThreeColumnTable

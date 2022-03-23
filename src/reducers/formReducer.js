@@ -12,7 +12,7 @@ const formReducer = (state=initialState, action) => {
 		case 'HIDE_FORM':
 			return {show: false, id: null, title: null, options: null};
 		case 'UPDATE_NODE_DATA':
-			return {show: true, id: action.id, title: action.title, options: action.options}
+			return {show: true, id: action.id, title: action.title, options: action.options, headers: action.headers, tableType: action.tableType}
 		default: 
 			return state;
 		}

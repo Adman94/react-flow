@@ -8,12 +8,14 @@
 	z-index: 1000;
 	top: 0;
 	padding: 1em 2em;
+	overflow-y: auto;
+	padding-bottom: 2em;
 }
 
 .add__node .container{
-	display: flex;
-	flex-direction: column;
-	height: 100%;
+	/*display: flex;
+	flex-direction: column;*/
+	min-height: 100%;
 }
 
 .add__node .container span{
@@ -74,6 +76,42 @@
 	margin-bottom: 1.5em;
 }
 
+.add__node form .types{
+	display: flex;
+	align-items: center;
+	width: 100%;
+	justify-content: space-between;
+	gap: 5px;
+	margin: 0;
+}
+
+.add__node form .headers__input__section input{
+	margin-bottom: 10px;
+}
+
+.add__node form .types label{
+	color: black;
+	font-size: 0.8em;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	width: 30%;
+	cursor: pointer;
+}
+
+.add__node form .types label p{
+	/*flex: 1;*/
+	min-width: fit-content;
+	background: transparent !important;
+	color: black;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.add__node form .types label input{
+	width: fit-content;
+}
+
 .add__node form button{
 	display: block;
 	width: 100%;
@@ -88,9 +126,10 @@
 	width: 100%;
 	background: #CECED6;
 	height: 100%;
-	flex: 1em;
+	/*flex: 1em;*/
 	margin-top: 1em;
 	overflow: auto;
+	height: 260px;
 }
 
 .add__node .preview table{

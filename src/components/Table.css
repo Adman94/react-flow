@@ -5,15 +5,17 @@ table {
 
 table > tbody > tr > td{
 	border: 1px solid black !important;
-	font-size: 0.7em;
+	font-size: 0.5em;
 	padding: 0.4em;
+	text-align: center;
 }
 
 table > thead > tr > th{
 	text-align: center !important;
 	color: white;
-	font-weight: 600;
+	font-weight: 500;
 	background: green;
-	font-size: 0.7em;
-	padding: 0.6em;
+	font-size: 0.6em;
+	padding: 0.4em 0.6em;
+	text-transform: capitalize;
 }
