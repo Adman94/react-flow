@@ -17,7 +17,7 @@ const TwoColumnTable = ({id, data, type}) => {
 			<table onContextMenu={handleContextMenu}>
 				<thead>
 					<tr>
-						<th colSpan="2" style={{background: '#004F2D'}}>{data.title}</th>
+						<th colSpan="2">{data.title}</th>
 					</tr>
 					<tr>
 						{

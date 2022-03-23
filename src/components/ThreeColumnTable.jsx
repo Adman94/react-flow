@@ -17,7 +17,7 @@ const ThreeColumnTable = ({id, data, type}) => {
 			<table onContextMenu={handleContextMenu}>
 				<thead>
 					<tr>
-						<th colSpan="3" style={{background: '#004F2D'}}>{data.title}</th>
+						<th colSpan="3">{data.title}</th>
 					</tr>
 					<tr>
 						{

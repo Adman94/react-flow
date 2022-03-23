@@ -17,7 +17,7 @@ const SingleColumnTable = ({id, data, type}) => {
 			<table onContextMenu={handleContextMenu}>
 				<thead>
 					<tr>
-						<th style={{background: '#004F2D'}}>{data.title}</th>
+						<th>{data.title}</th>
 					</tr>
 				</thead>
 				<tbody>
