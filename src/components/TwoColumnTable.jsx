@@ -4,7 +4,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import {useDispatch} from 'react-redux'
 import {updateNodeData} from '../actions/form'
 
-const Table = ({id, data}) => {
+const TwoColumnTable = ({id, data}) => {
 	const dispatch = useDispatch();
 
 	const handleContextMenu = (e) => {
@@ -39,4 +39,4 @@ const Table = ({id, data}) => {
 		)
 }
 
-export default Table
+export default TwoColumnTable

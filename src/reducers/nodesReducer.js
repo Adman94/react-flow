@@ -16,7 +16,7 @@ const initialNodes = [
         ["tyre", "rubber"]
     ]
   },
-    type: 'table',
+    type: 'twoColumnTable',
     position: { x: 100, y: 125 },
   },
   {

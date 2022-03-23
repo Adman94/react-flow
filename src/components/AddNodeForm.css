@@ -101,3 +101,30 @@
 	padding: 1em;
 	font-size: 1em;
 }
+
+.add__node .preview table tr{
+	position: relative;
+}
+
+.add__node .preview table tr p{
+	background-color: red;
+	height: 3px;
+	width: 3px;
+	border-radius: 50%;
+	color: white;
+	display: grid;
+	place-content: center;
+	font-weight: 700;
+	font-size: 1em;
+	margin-top: 10px;
+	margin-left: 5px;
+	cursor: pointer;
+	visibility: hidden;
+	position: absolute;
+	right: 0;
+	transition: 0.2s;
+}
+
+.add__node .preview table tr:hover > p{
+	visibility: visible;
+}

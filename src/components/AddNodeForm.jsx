@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ReactFlow, { useReactFlow, useNodes, useEdges } from 'react-flow-renderer';
 import { createNewNode } from '../actions/nodes'
 import { createNewEdge } from '../actions/edges'
+import { updateTable } from '../actions/general'
 import { useDispatch, useSelector } from 'react-redux'
 import { hideForm } from '../actions/form'
 
@@ -62,11 +63,9 @@ const AddNodeForm = () => {
   		if(updateNodeData){
   			const nodeIndex = stateNodes.findIndex((node)=> node.id == formState.id);
 
-  			stateNodes[nodeIndex].title = title;
-  			stateNodes[nodeIndex].options = options
-
-  			console.log(stateNodes)
-  			dispatch(createNewNode(stateNodes));
+  			stateNodes[nodeIndex].data.title = title;
+  			stateNodes[nodeIndex].data.options = options;
+  			dispatch(updateTable(stateNodes));
   			setOptions([]);
 	    	setTitle('');
 	    	setUpdateNodeData(false);
@@ -82,7 +81,7 @@ const AddNodeForm = () => {
 	        title, 
 	        options: options,
 	      },
-	      type: 'table',
+	      type: 'twoColumnTable',
 	    };
 	    reactFlowInstance.addNodes(newNode);
 	    dispatch(createNewNode([...stateNodes, newNode]));
@@ -90,6 +89,10 @@ const AddNodeForm = () => {
 	    setTitle('');
   		}
   	}
+  }
+
+  const handleDelete = (index) => {
+  	setOptions(options.filter((_, i) => i !== index))
   }
 
 	return (
@@ -142,6 +145,7 @@ const AddNodeForm = () => {
 									<tr key={option[0] + "" + i}>
 										<td>{option[0]}</td>
 										<td>{option[1]}</td>
+										<p onClick={()=> handleDelete(i)}>-</p>
 									</tr>
 								))
 							}

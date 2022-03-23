@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import ReactFlow, { addEdge, applyNodeChanges, applyEdgeChanges, ReactFlowProvider, useReactFlow, MiniMap, Controls, useNodes, useEdges } from 'react-flow-renderer';
-import Table from './Table'
+import TwoColumnTable from './TwoColumnTable'
 import {useSelector, useDispatch} from 'react-redux'
 import { createNewEdge } from '../actions/edges'
+import { createNewNode } from '../actions/nodes'
 import {showForm} from '../actions/form'
 
 const edgeOptions = {
@@ -16,6 +17,7 @@ const connectionLineStyle = { stroke: 'white' };
 const defaultEdgeOptions = { animated: true };
 
 const Flow = () => {
+  const generalState = useSelector(state => state.general);
   const initialNodes = useSelector(state => state.nodes);
   const initialEdges = useSelector(state => state.edges);
   const [nodes, setNodes] = useState(initialNodes)
@@ -29,17 +31,22 @@ const Flow = () => {
   }, [edges]);
 
   useEffect(()=>{
-    console.log(initialNodes)
-    setNodes(initialNodes)
-  }, [initialNodes])
+    dispatch(createNewNode(nodes))
+  }, [nodes]);
 
-  useCallback(
-    (changes) => setNodes(initialNodes),
-    [setNodes]
-  );
+  useEffect(()=>{
+    if(generalState.nodes.length > 0){
+      setNodes([])
+      setTimeout(()=>{
+        setNodes([...generalState.nodes])
+      }, 100)
+      console.log('nodes', nodes)
+    }else{
+      setNodes(initialNodes)
+    }
+  }, [generalState.nodes])
 
-
-  const nodeTypes = useMemo(()=> ({table: Table}), []);
+  const nodeTypes = useMemo(()=> ({twoColumnTable: TwoColumnTable}), []);
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
