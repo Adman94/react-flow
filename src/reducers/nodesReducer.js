@@ -1,14 +1,9 @@
 const initialNodes = [
   {
     id: '1',
-    type: 'input',
-    data: { label: 'Input Node' },
-    position: { x: 250, y: 25 },
-  },
-  {
-    id: '2',
     data: { 
       title: 'test 1',
+      latexFormula: "Latex Formula",
       headers: ["Data", "Val"], 
       options: [
         ["Book", "paper"],
@@ -16,25 +11,27 @@ const initialNodes = [
     ]
   },
     type: 'twoColumnTable',
-    position: { x: 100, y: 125 },
+    position: { x: 76, y: 136 },
+  },
+  {
+    id: '2',
+    data: { 
+      title: 'Students',
+      latexFormula: "grade = A",
+      headers: ["Name", "Age", "Grade"], 
+      options: [
+        ["Ben", "12", "A"],
+        ["Chris", "13", "B"]
+    ]
+  },
+    type: 'threeColumnTable',
+    position: { x: 222, y: 62 },
   },
   {
     id: '3',
     data: { 
-      title: 'test 3',
-      headers: ["Data", "Val", "Extra"], 
-      options: [
-        ["Book", "paper", "pulp"],
-        ["tyre", "rubber", "latex"]
-    ]
-  },
-    type: 'threeColumnTable',
-    position: { x: 230, y: 115 },
-  },
-  {
-    id: '4',
-    data: { 
-      title: 'test 2', 
+      title: 'Motion',
+      latexFormula: "e=mc", 
       options: [
         "Book", 
         "paper",
@@ -42,20 +39,16 @@ const initialNodes = [
     ]
   },
     type: 'singleColumnTable',
-    position: { x: 400, y: 125 },
-  },
-  {
-    id: '5',
-    type: 'output',
-    data: { label: 'Output Node' },
-    position: { x: 250, y: 250 },
-  },
+    position: { x: 411, y: 102 },
+  }
 ];
 
 const nodesReducer = (state=initialNodes, action) => {
 	switch(action.type){
 		case 'CREATE_NODE':
 			return [...action.data];
+    case 'DELETE_NODE':
+      return [...state.filter(nds => nds.id !== action.id)];
 		default:
 			return state;
 	}

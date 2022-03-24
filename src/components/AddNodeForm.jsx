@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import './AddNodeForm.css'
 import { v4 as uuidv4 } from 'uuid';
 import ReactFlow, { useReactFlow, useNodes, useEdges } from 'react-flow-renderer';
-import { createNewNode } from '../actions/nodes'
+import { createNewNode, deleteNode } from '../actions/nodes'
 import { createNewEdge } from '../actions/edges'
 import { updateTable } from '../actions/general'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,15 +17,26 @@ const AddNodeForm = () => {
 	const [dataThree, setDataThree] = useState('');
 	const [headerOne, setHeaderOne] = useState("");
 	const [headerTwo, setHeaderTwo] = useState("");
+	const [latexFormula, setLatexFormula] = useState("");
+	const [showCustomTablePreview, setShowCustomTablePreview] = useState(false);
 	const [headerThree, setHeaderThree] = useState("");
 	const [errorMessage, setErrorMessage] = useState('');
-	const [updateNodeData, setUpdateNodeData] = useState(false)
+	const [updateNodeData, setUpdateNodeData] = useState(false);
+	const [numberOfCustomColumns, setNumberOfCustomColumns] = useState(4);
+	const [customTableOptions, setCustomTableOptions] = useState([]);
+	const [customTableHeaders, setCustomTableHeaders] = useState([]);
+	const [customTableRowData, setCustomTableRowData] = useState([])
 	const nodes = useNodes();
   const edges = useEdges();
 	const reactFlowInstance = useReactFlow();
 	const dispatch = useDispatch();
 	const stateNodes = useSelector(state => state.nodes);
 	const formState = useSelector(state => state.form);
+
+	useEffect(()=> {
+		setCustomTableHeaders(Array.from({length: numberOfCustomColumns}).map(num => ""));
+		setCustomTableRowData(Array.from({length: numberOfCustomColumns}).map(num => ""));
+	}, [numberOfCustomColumns])
 
 	useEffect(() => {
 		if(formState.title){
@@ -36,12 +47,20 @@ const AddNodeForm = () => {
 				setHeaderTwo(formState.headers[1])
 				setHeaderThree(formState.headers[2])
 				setTableType('threeColumnTable')
+				setLatexFormula(formState.latexFormula)
 			}else if(formState.tableType === "twoColumnTable"){
 				setHeaderOne(formState.headers[0])
 				setHeaderTwo(formState.headers[1])
 				setTableType('twoColumnTable')
+				setLatexFormula(formState.latexFormula)
+			}else if(formState.tableType === "custom"){
+				setTableType("custom");
+				setCustomTableHeaders([...formState.headers])
+				setCustomTableOptions(formState.options)
+				setLatexFormula(formState.latexFormula)
 			}else{
 				setTableType('singleColumnTable')
+				setLatexFormula(formState.latexFormula)
 			}
 			setUpdateNodeData(true)
 		}
@@ -66,6 +85,7 @@ const AddNodeForm = () => {
  	setHeaderThree('');
  	setOptions([]);
  	setTitle('');
+ 	setLatexFormula('')
  }
 
   const createNewPair = (e) => {
@@ -104,6 +124,7 @@ const AddNodeForm = () => {
   			const nodeIndex = stateNodes.findIndex((node)=> node.id == formState.id);
   			stateNodes[nodeIndex].data.title = title;
   			stateNodes[nodeIndex].data.options = options;
+  			stateNodes[nodeIndex].data.latexFormula = latexFormula;
   			if(formState.headers.length > 1){
   				if(formState.tableType === "threeColumnTable"){
   					stateNodes[nodeIndex].data.headers = [headerOne, headerTwo, headerThree]
@@ -113,6 +134,7 @@ const AddNodeForm = () => {
   			}
   			dispatch(updateTable(stateNodes));
   			resetHeadersInput();
+  			resetDataInput();
 	    	setUpdateNodeData(false);
 	    	dispatch(hideForm())
   		}else{
@@ -124,10 +146,11 @@ const AddNodeForm = () => {
 			        y: Math.random() * 100,
 			      },
 			      data: { 
-			        title, 
+			        title,
+			        latexFormula, 
 			        options: options
 			      },
-			      type: 'singleColumnTable',
+			      type: 'singleColumnTable'
 			    };
 			    reactFlowInstance.addNodes(newNode);
 			    dispatch(createNewNode([...stateNodes, newNode]));
@@ -140,11 +163,12 @@ const AddNodeForm = () => {
 			        y: Math.random() * 100,
 			      },
 			      data: { 
-			        title, 
+			        title,
+			        latexFormula, 
 			        options: options,
 			        headers: [headerOne, headerTwo]
 			      },
-			      type: 'twoColumnTable',
+			      type: 'twoColumnTable'
 			    };
 			    reactFlowInstance.addNodes(newNode);
 			    dispatch(createNewNode([...stateNodes, newNode]));
@@ -157,11 +181,12 @@ const AddNodeForm = () => {
 			        y: Math.random() * 100,
 			      },
 			      data: { 
-			        title, 
+			        title,
+			        latexFormula, 
 			        options: options,
 			        headers: [headerOne, headerTwo, headerThree]
 			      },
-			      type: 'threeColumnTable',
+			      type: 'threeColumnTable'
 			    };
 			    reactFlowInstance.addNodes(newNode);
 			    dispatch(createNewNode([...stateNodes, newNode]));
@@ -175,14 +200,92 @@ const AddNodeForm = () => {
   	setOptions(options.filter((_, i) => i !== index))
   }
 
+  const handleDeleteTable = (id) => {
+  	if(confirm("Delete Table")){
+  		dispatch(deleteNode(id))
+  		dispatch(updateTable(stateNodes.filter(nds => nds.id !== id)));
+  		dispatch(hideForm())
+  	}
+  }
+
+  const handleCustomTableDelete = (index) => {
+  	setCustomTableOptions(customTableOptions.filter((_, i) => i !== index))
+  }
+
+  const createCustomTableRowData = () => {
+  	setCustomTableOptions([...customTableOptions, customTableRowData]);
+  	setCustomTableRowData([...customTableRowData].fill(""))
+  }
+
+  const handleCustomTableSubmit = () => {
+  	const newNode = {
+      id: uuidv4(),
+      position: {
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+      },
+      data: { 
+        title,
+        latexFormula, 
+        options: customTableOptions,
+        headers: customTableHeaders
+      },
+      type: 'custom'
+    };
+    reactFlowInstance.addNodes(newNode);
+    dispatch(createNewNode([...stateNodes, newNode]));
+    setCustomTableRowData([]);
+    setCustomTableOptions([]);
+    resetHeadersInput()
+    setShowCustomTablePreview(false)
+  }
+
 	return (
 		<div className="add__node">
+			{errorMessage &&
+				<p className="error__message">{errorMessage}</p>
+			}
+			{
+				showCustomTablePreview &&
+				<div className="preview-two">
+				<span onClick={()=> setShowCustomTablePreview(false)}>X</span>
+				<div className="preview-two-container">
+					<h1>Custom Table</h1>
+					<div className="flex">
+						<div className="table-container">
+							<table>
+								<thead>
+									<tr>
+										{customTableHeaders.map((header, i) => <th key={header + "" + i}>{header}</th>)}
+									</tr>
+								</thead>
+								<tbody>
+									{
+										customTableOptions.map((option, i) => (
+											<tr key={option + "" + i}>
+												{
+													option.map((data, j) => <td key={data + "" + j}>{data}</td>)
+												}
+												<p onClick={()=> handleCustomTableDelete(i)}>x</p>
+											</tr>
+										))
+									}
+								</tbody>
+							</table>
+						</div>
+						<div className="form__container">
+							<label>Input column data</label>
+							{Array.from({length: numberOfCustomColumns}).map((num, i) => <input type="text" key={i} placeholder={`Column ${i + 1}`} style={{marginTop: "1em"}} value={customTableRowData[i] ? customTableRowData[i] : ''} onChange={(e)=> {customTableRowData[i] = e.target.value; setCustomTableRowData([...customTableRowData])}} />)}
+							<button onClick={createCustomTableRowData}>Enter values</button>
+							<button onClick={handleCustomTableSubmit}>{!updateNodeData ? 'Create Table' : 'Update Table'}</button>							
+						</div>
+					</div>
+				</div>
+			</div>
+			}
 			<div className="container">
 				<h1>{!updateNodeData ? 'Add Table' : 'Update Table'}</h1>
 				<span onClick={()=> dispatch(hideForm())}>X</span>
-				{errorMessage &&
-					<p className="error__message">{errorMessage}</p>
-				}
 				<form onSubmit={handleSubmit}>
 					<label>Table Name:</label>
 					<input 
@@ -190,6 +293,13 @@ const AddNodeForm = () => {
 						placeholder="Name"
 						value={title}
 						onChange={(e)=> setTitle(e.target.value)}
+					 />
+					 <label>Latex formula:</label>
+					<input 
+						type="text" 
+						placeholder="Latex Formula"
+						value={latexFormula}
+						onChange={(e)=> setLatexFormula(e.target.value)}
 					 />
 					<label>Table Type</label>
 					<div className="types">
@@ -217,7 +327,23 @@ const AddNodeForm = () => {
 								onChange={()=> {setOptions([]); setTableType("threeColumnTable");}} />
 							<p>Table-3</p>							
 						</label>
+						<label>
+							<input 
+								type="radio" 
+								name="table-type"
+								checked={tableType === "custom" && true}  
+								onChange={()=> {setOptions([]); setTableType("custom");}} />
+							<p>Custom</p>							
+						</label>
 					</div>
+					{tableType === "custom" && <div>
+						<label>Enter Number of Columns</label>
+						<input type="number" value={numberOfCustomColumns} onChange={(e)=> setNumberOfCustomColumns(e.target.value)} />
+					 </div>}
+					 {tableType === "custom" && <label>Enter columns header</label>}
+					{
+						tableType === "custom" && Array.from({length: numberOfCustomColumns}).map((num, i) => <input type="text" key={i} placeholder={`Header ${i + 1}`} style={{marginTop: "1em"}} value={customTableHeaders[i] ? customTableHeaders[i] : ''} onChange={(e)=> {customTableHeaders[i] = e.target.value; setCustomTableHeaders([...customTableHeaders])}} />)
+					}
 							{ (tableType === "twoColumnTable" || tableType === "threeColumnTable") &&
 								<>
 									<div className="headers__input__section">
@@ -249,12 +375,13 @@ const AddNodeForm = () => {
 							}
 					<label>Enter values</label>
 					<div className="input__row">
-						<input 
-							type="text" 
-							placeholder="Data 1"
-							value={dataOne}
-							onChange={(e)=> setDataOne(e.target.value)}
-						/>
+						{tableType !== "custom" && <input 
+								type="text" 
+								placeholder="Data 1"
+								value={dataOne}
+								onChange={(e)=> setDataOne(e.target.value)}
+							/>
+						}
 						{
 							(tableType === "twoColumnTable" || tableType === "threeColumnTable") &&
 							<>
@@ -277,62 +404,71 @@ const AddNodeForm = () => {
 							)
 						}
 					</div>
-					<button onClick={createNewPair}>Add values</button>
-					<button type="submit">{!updateNodeData ? 'Create Table' : 'Update Table'}</button>
+					{tableType !== "custom" &&
+						<>
+							<button onClick={createNewPair}>Add values</button>
+							<button type="submit">{!updateNodeData ? 'Create Table' : 'Update Table'}</button>
+							{updateNodeData && <button style={{background: "red", color: "#fff"}} onClick={()=> handleDeleteTable(formState.id)}>Delete Table</button>}
+						</>
+					}
+					{tableType === "custom" &&
+						<button onClick={(e)=> {e.preventDefault(); if(title){setShowCustomTablePreview(true)}else{showError("Enter Title")}}}>Preview Table</button>
+					}
 				</form>
-				<div className="preview">
+				{tableType !== "custom" && <div className="preview">
 					{
 						options.length > 0 &&
 						<table>
-						<thead>
-							{
-								tableType === "twoColumnTable" && 
-								<tr>
-									<th>{headerOne}</th>
-									<th>{headerTwo}</th>				
-								</tr>
-							}
-							{
-								tableType === "threeColumnTable" && 
-								<tr>
-									<th>{headerOne}</th>
-									<th>{headerTwo}</th>
-									<th>{headerThree}</th>				
-								</tr>
-							}
-						</thead>
-						<tbody>
-						{ tableType === "singleColumnTable" &&
-								options.map((option, i)=>(
-									<tr key={option + "" + i}>
-										<td>{option}</td>
-										<p onClick={()=> handleDelete(i)}>-</p>
+							<thead>
+								{
+									tableType === "twoColumnTable" && 
+									<tr>
+										<th>{headerOne}</th>
+										<th>{headerTwo}</th>				
 									</tr>
-								))
-							}
-							{ tableType === "twoColumnTable" &&
-								options.map((option, i)=>(
-									<tr key={option[0] + "" + i}>
-										<td>{option[0]}</td>
-										<td>{option[1]}</td>
-										<p onClick={()=> handleDelete(i)}>-</p>
+								}
+								{
+									tableType === "threeColumnTable" && 
+									<tr>
+										<th>{headerOne}</th>
+										<th>{headerTwo}</th>
+										<th>{headerThree}</th>				
 									</tr>
-								))
-							}
-							{ tableType === "threeColumnTable" &&
-								options.map((option, i)=>(
-									<tr key={option[0] + "" + i}>
-										<td>{option[0]}</td>
-										<td>{option[1]}</td>
-										<td>{option[2]}</td>
-										<p onClick={()=> handleDelete(i)}>-</p>
-									</tr>
-								))
-							}
-						</tbody>
-					</table>
+								}
+							</thead>
+							<tbody>
+							{ tableType === "singleColumnTable" &&
+									options.map((option, i)=>(
+										<tr key={option + "" + i}>
+											<td>{option}</td>
+											<p onClick={()=> handleDelete(i)}>-</p>
+										</tr>
+									))
+								}
+								{ tableType === "twoColumnTable" &&
+									options.map((option, i)=>(
+										<tr key={option[0] + "" + i}>
+											<td>{option[0]}</td>
+											<td>{option[1]}</td>
+											<p onClick={()=> handleDelete(i)}>-</p>
+										</tr>
+									))
+								}
+								{ tableType === "threeColumnTable" &&
+									options.map((option, i)=>(
+										<tr key={option[0] + "" + i}>
+											<td>{option[0]}</td>
+											<td>{option[1]}</td>
+											<td>{option[2]}</td>
+											<p onClick={()=> handleDelete(i)}>-</p>
+										</tr>
+									))
+								}
+							</tbody>
+						</table>
 					}
 				</div>
+				}
 			</div>
 		</div>
 		)

@@ -8,13 +8,14 @@ const ThreeColumnTable = ({id, data, type}) => {
 	const dispatch = useDispatch();
 	const handleContextMenu = (e) => {
 		e.preventDefault();
-		dispatch(updateNodeData(id, data.title, data.options, data.headers, type))
+		dispatch(updateNodeData(id, data.title, data.options, data.headers, type, data.latexFormula))
 	}
-
 	return (
 		<Fragment>
 			<Handle type="target" position={Position.Top}  />
-			<table onContextMenu={handleContextMenu}>
+			<div className='container'>
+				{data.latexFormula && <p>{data.latexFormula}</p>}
+				<table onContextMenu={handleContextMenu}>
 				<thead>
 					<tr>
 						<th colSpan="3">{data.title}</th>
@@ -39,6 +40,7 @@ const ThreeColumnTable = ({id, data, type}) => {
 					}
 				</tbody>
 			</table>
+			</div>
 			<Handle type="source" position={Position.Right} id="attach" />
 			<Handle position={Position.Bottom} id="output" />
 			<Handle type="target" position={Position.Left} id="atach2" />

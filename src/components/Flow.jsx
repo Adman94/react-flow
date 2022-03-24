@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import ReactFlow, { addEdge, applyNodeChanges, applyEdgeChanges, ReactFlowProvider, useReactFlow, MiniMap, Controls, useNodes, useEdges } from 'react-flow-renderer';
 import TwoColumnTable from './TwoColumnTable'
+import CustomTable from './CustomTable'
 import SingleColumnTable from './SingleColumnTable'
 import ThreeColumnTable from './ThreeColumnTable'
 import {useSelector, useDispatch} from 'react-redux'
@@ -51,7 +52,8 @@ const Flow = () => {
   const nodeTypes = useMemo(()=> ({
     twoColumnTable: TwoColumnTable,
     singleColumnTable: SingleColumnTable,
-    threeColumnTable: ThreeColumnTable
+    threeColumnTable: ThreeColumnTable,
+    custom: CustomTable
   }), []);
 
   const onNodesChange = useCallback(

@@ -4,7 +4,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import {useDispatch} from 'react-redux'
 import {updateNodeData} from '../actions/form'
 
-const TwoColumnTable = ({id, data, type}) => {
+const CustomTable = ({id, data, type}) => {
 	const dispatch = useDispatch();
 	const handleContextMenu = (e) => {
 		e.preventDefault();
@@ -13,13 +13,13 @@ const TwoColumnTable = ({id, data, type}) => {
 
 	return (
 		<Fragment>
-			<Handle type="target" position={Position.Top}  />
+			<Handle type="target" position={Position.Top} />
 			<div className="container">
 				{data.latexFormula && <p>{data.latexFormula}</p>}
 				<table onContextMenu={handleContextMenu}>
 					<thead>
 						<tr>
-							<th colSpan="2">{data.title}</th>
+							<th colSpan={data.headers.length}>{data.title}</th>
 						</tr>
 						<tr>
 							{
@@ -32,9 +32,10 @@ const TwoColumnTable = ({id, data, type}) => {
 					<tbody>
 						{
 							data.options.map((option, i) => (
-								<tr key={option[0] + "" + i}>
-									<td>{option[0]}</td>
-									<td>{option[1]}</td>
+								<tr key={option + "" + i}>
+									{
+										option.map((data, i) => <td key={data + "" + i}>{data}</td>)
+									}
 								</tr>
 							))
 						}
@@ -48,4 +49,4 @@ const TwoColumnTable = ({id, data, type}) => {
 		)
 }
 
-export default TwoColumnTable
+export default CustomTable

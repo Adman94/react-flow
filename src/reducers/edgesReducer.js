@@ -1,6 +1,4 @@
-const initialEdges = [
-  { id: 'e1-2', source: '1', target: '2' }
-];
+const initialEdges = [];
 
 const edgesReducer = (state=initialEdges, action) => {
   switch(action.type){

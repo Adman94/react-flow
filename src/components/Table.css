@@ -1,6 +1,31 @@
 table {
 	border: 1px solid black;
 	width: 100px;
+	position: relative;
+}
+
+.container{
+	position: relative;
+	display: flex;
+	gap: 5px;
+}
+
+.container > p{
+	/*position: absolute;
+	left: -49px;*/
+	height: fit-content;
+	width: fit-content;
+	min-height: 40px;
+	min-width: 40px;
+	max-height: 60px;
+	max-width: 60px;
+	padding: 0.2em;
+	color: white;
+	text-align: center;
+	display: grid;
+	place-content: center;
+	background: green;
+	font-size: 0.6em;
 }
 
 table > tbody > tr > td{

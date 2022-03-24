@@ -12,9 +12,146 @@
 	padding-bottom: 2em;
 }
 
+.error__message{
+	position: fixed;
+	color: white;
+	background: red;
+	padding: 1em;
+	width: 100%;
+	text-align: center;
+	border-radius: 5px;
+	max-width: 320px;
+	z-index: 1001;
+}
+
+.add__node .preview-two{
+	position: fixed;
+	width: 80%;
+	z-index: 1010;
+	background: #fff;
+	inset:  0;
+	margin: auto;
+	height: 90%;
+	box-shadow: 0px 0px 8px lightgrey;
+}
+
+.add__node .preview-two span{
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	font-weight: 500;
+	font-size: 1.2em;
+	color: white;
+	background: black;
+	height: 30px;
+	width: 30px;
+	display: grid;
+	place-content: center;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.add__node .preview-two .preview-two-container{
+	display: flex;
+	flex-direction: column;
+	padding: 1em;
+	height: 100%;
+	width: 90%;
+	margin: 0 auto;
+}
+
+.add__node .preview-two .preview-two-container > h1{
+	margin: 0 0 1em;
+}
+
+.add__node .preview-two .preview-two-container > .flex{
+	width: 100%;
+	display: flex;
+	height: 100%;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container{
+	min-width: 400px;
+	max-height: 600px;
+	flex: 0.65;
+	overflow-x: auto;
+	max-width: 700px;
+	max-height: 400px;
+	overflow-y: auto;
+	background-color: lightgray;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .form__container{
+	flex: 0.35;
+	min-height: 100%;
+	margin-left: 10px;
+	overflow-y: auto;
+	padding: 1em;
+	border: 1px solid lightgrey;
+	max-height: 500px;
+	overflow-y: auto;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .form__container > label{
+	font-weight: 600;
+	font-size: 1em;
+	text-transform: uppercase;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .form__container > button{
+	display: block;
+	margin-top: 1em;
+	padding: 1em;
+	width: 100%;
+	border: 1px solid lightgrey;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container > table{
+	width: 100%;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container > table > tbody > tr{
+	position: relative;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container > table > thead > tr > th{
+	min-width: 150px;
+	font-size: 1em;
+	height: 40px;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container > table > tbody > tr > td{
+	min-width: 150px;
+	font-size: 1em;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container > table > tbody > tr > p{
+	position: absolute;
+	right: 10px;
+	background-color: red;
+	height: 20px;
+	width: 20px;
+	border-radius: 50%;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 700;
+	font-size: 1em;
+	margin-top: 10px;
+	margin-left: 5px;
+	cursor: pointer;
+	visibility: hidden;
+	transition: 0.2s;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container > table > tbody > tr:hover > p{
+	visibility: visible;
+}
+
 .add__node .container{
-	/*display: flex;
-	flex-direction: column;*/
 	min-height: 100%;
 }
 
@@ -32,15 +169,6 @@
 	place-content: center;
 	border-radius: 50%;
 	cursor: pointer;
-}
-
-.add__node .container p{
-	color: white;
-	background: red;
-	padding: 1em;
-	width: 100%;
-	text-align: center;
-	border-radius: 5px;
 }
 
 .add__node h1{
@@ -61,7 +189,7 @@
 	color: #6E7C96;
 }
 
-.add__node form input{
+.add__node input{
 	width: 100%;
 	padding: 1em;
 	outline: none;
@@ -147,20 +275,22 @@
 
 .add__node .preview table tr p{
 	background-color: red;
-	height: 3px;
-	width: 3px;
+	height: 20px;
+	width: 20px;
 	border-radius: 50%;
 	color: white;
-	display: grid;
-	place-content: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	font-weight: 700;
 	font-size: 1em;
 	margin-top: 10px;
 	margin-left: 5px;
 	cursor: pointer;
 	visibility: hidden;
+	transition: 0.2s;
 	position: absolute;
-	right: 0;
+	right: 10px;
 	transition: 0.2s;
 }
 
