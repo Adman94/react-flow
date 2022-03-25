@@ -153,12 +153,13 @@
 
 .add__node .container{
 	min-height: 100%;
+	flex-direction: column;
 }
 
-.add__node .container span{
+.add__node .container > span{
 	position: absolute;
 	top: 20px;
-	right: 30px;
+	right: 10px;
 	font-weight: 500;
 	font-size: 1.2em;
 	color: white;

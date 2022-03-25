@@ -26,6 +26,8 @@ table {
 	place-content: center;
 	background: green;
 	font-size: 0.6em;
+	position: absolute;
+	right: calc(100% + 5px);
 }
 
 table > tbody > tr > td{
