@@ -17,6 +17,7 @@ const AddNodeForm = () => {
 	const [dataThree, setDataThree] = useState('');
 	const [headerOne, setHeaderOne] = useState("");
 	const [headerTwo, setHeaderTwo] = useState("");
+	const [updateCell, setUpdateCell] = useState({show: false, id: ""});
 	const [latexFormula, setLatexFormula] = useState("");
 	const [showCustomTablePreview, setShowCustomTablePreview] = useState(false);
 	const [headerThree, setHeaderThree] = useState("");
@@ -208,7 +209,55 @@ const AddNodeForm = () => {
   	}
   }
 
-  const handleCustomTableDelete = (index) => {
+  const editCell = (index, tableType) => {
+  	if(tableType === "singleColumnTable"){
+  		setDataOne(options[index])
+  		setUpdateCell({show: true, index})
+  	}else if(tableType === "twoColumnTable"){
+  		setDataOne(options[index][0])
+  		setDataTwo(options[index][1])
+  		setUpdateCell({show: true, index})
+  	}else if(tableType === "threeColumnTable"){
+  		setDataOne(options[index][0])
+  		setDataTwo(options[index][1])
+  		setDataThree(options[index][2])
+  		setUpdateCell({show: true, index})
+  	}else{
+  		setCustomTableRowData(customTableOptions[index])
+  		setUpdateCell({show: true, index})
+  	}
+  }
+
+  const handleUpdateCell = (index, tableType) => {
+  	if(tableType === "singleColumnTable"){
+  		options[index] = dataOne
+  		setOptions(options)
+  		resetDataInput()
+  		setUpdateCell({show: false, index: ""})
+  	}else if(tableType === "twoColumnTable"){
+  		setDataOne(options[index][0])
+  		setDataTwo()
+  		options[index][0] = dataOne;
+  		options[index][1] = dataTwo
+  		setOptions(options)
+  		resetDataInput()
+  		setUpdateCell({show: false, index: ""})
+  	}else if(tableType === "threeColumnTable"){
+  		options[index][0] = dataOne
+  		options[index][1] = dataTwo
+  		options[index][2] = dataThree
+  		setOptions(options)
+  		resetDataInput()
+  		setUpdateCell({show: false, index: ""})
+  	}else{
+  		customTableOptions[index] = customTableRowData;
+  		setCustomTableOptions(customTableOptions)
+  		setCustomTableRowData([])
+  		setUpdateCell({show: false, index: ""})
+  	}
+  }
+
+  const handleCustomTableOptionDelete = (index) => {
   	setCustomTableOptions(customTableOptions.filter((_, i) => i !== index))
   }
 
@@ -218,26 +267,41 @@ const AddNodeForm = () => {
   }
 
   const handleCustomTableSubmit = () => {
-  	const newNode = {
-      id: uuidv4(),
-      position: {
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-      },
-      data: { 
-        title,
-        latexFormula, 
-        options: customTableOptions,
-        headers: customTableHeaders
-      },
-      type: 'custom'
-    };
-    reactFlowInstance.addNodes(newNode);
-    dispatch(createNewNode([...stateNodes, newNode]));
-    setCustomTableRowData([]);
-    setCustomTableOptions([]);
-    resetHeadersInput()
-    setShowCustomTablePreview(false)
+  	if(updateNodeData){
+  			const nodeIndex = stateNodes.findIndex((node)=> node.id == formState.id);
+  			stateNodes[nodeIndex].data.title = title;
+  			stateNodes[nodeIndex].data.options = options;
+  			stateNodes[nodeIndex].data.latexFormula = latexFormula;
+  			stateNodes[nodeIndex].data.headers = customTableHeaders
+  			dispatch(updateTable(stateNodes));
+  			resetHeadersInput();
+  			resetDataInput();
+  			setCustomTableRowData([]);
+	    	setCustomTableOptions([]);
+	    	setUpdateNodeData(false);
+	    	dispatch(hideForm())
+  	}else{
+  		const newNode = {
+	      id: uuidv4(),
+	      position: {
+	        x: Math.random() * 100,
+	        y: Math.random() * 100,
+	      },
+	      data: { 
+	        title,
+	        latexFormula, 
+	        options: customTableOptions,
+	        headers: customTableHeaders
+	      },
+	      type: 'custom'
+	    };
+	    reactFlowInstance.addNodes(newNode);
+	    dispatch(createNewNode([...stateNodes, newNode]));
+	    setCustomTableRowData([]);
+	    setCustomTableOptions([]);
+	    resetHeadersInput()
+	    setShowCustomTablePreview(false)
+	  }
   }
 
 	return (
@@ -266,7 +330,8 @@ const AddNodeForm = () => {
 												{
 													option.map((data, j) => <td key={data + "" + j}>{data}</td>)
 												}
-												<p onClick={()=> handleCustomTableDelete(i)}>x</p>
+												<p className="edit" onClick={()=> editCell(i, tableType)}>🖊</p>
+												<p onClick={()=> handleCustomTableOptionDelete(i)}>🗑</p>
 											</tr>
 										))
 									}
@@ -276,8 +341,10 @@ const AddNodeForm = () => {
 						<div className="form__container">
 							<label>Input column data</label>
 							{Array.from({length: numberOfCustomColumns}).map((num, i) => <input type="text" key={i} placeholder={`Column ${i + 1}`} style={{marginTop: "1em"}} value={customTableRowData[i] ? customTableRowData[i] : ''} onChange={(e)=> {customTableRowData[i] = e.target.value; setCustomTableRowData([...customTableRowData])}} />)}
+							{updateCell.show && <button style={{background: "#35A7FF", color: "#fff", marginBottom: "4em"}} onClick={()=> handleUpdateCell(updateCell.index, tableType)}>Update Cell</button>}
 							<button onClick={createCustomTableRowData}>Enter values</button>
-							<button onClick={handleCustomTableSubmit}>{!updateNodeData ? 'Create Table' : 'Update Table'}</button>							
+							<button onClick={handleCustomTableSubmit}>{!updateNodeData ? 'Create Table' : 'Update Table'}</button>
+							{updateNodeData && <button style={{background: "red", color: "#fff"}} onClick={()=> handleDeleteTable(formState.id)}>Delete Table</button>}							
 						</div>
 					</div>
 				</div>
@@ -404,6 +471,7 @@ const AddNodeForm = () => {
 							)
 						}
 					</div>
+					{updateCell.show && <button style={{background: "#35A7FF", color: "#fff", marginBottom: "4em"}} onClick={()=> handleUpdateCell(updateCell.index, tableType)}>Update Cell</button>}
 					{tableType !== "custom" &&
 						<>
 							<button onClick={createNewPair}>Add values</button>
@@ -441,7 +509,8 @@ const AddNodeForm = () => {
 									options.map((option, i)=>(
 										<tr key={option + "" + i}>
 											<td>{option}</td>
-											<p onClick={()=> handleDelete(i)}>-</p>
+											<p className="edit" onClick={()=> editCell(i, tableType)}>🖊</p>
+											<p onClick={()=> handleDelete(i)}>🗑</p>
 										</tr>
 									))
 								}
@@ -450,7 +519,8 @@ const AddNodeForm = () => {
 										<tr key={option[0] + "" + i}>
 											<td>{option[0]}</td>
 											<td>{option[1]}</td>
-											<p onClick={()=> handleDelete(i)}>-</p>
+											<p className="edit" onClick={()=> editCell(i, tableType)}>🖊</p>
+											<p onClick={()=> handleDelete(i)}>🗑</p>
 										</tr>
 									))
 								}
@@ -460,7 +530,8 @@ const AddNodeForm = () => {
 											<td>{option[0]}</td>
 											<td>{option[1]}</td>
 											<td>{option[2]}</td>
-											<p onClick={()=> handleDelete(i)}>-</p>
+											<p className="edit" onClick={()=> editCell(i, tableType)}>🖊</p>
+											<p onClick={()=> handleDelete(i)}>🗑</p>
 										</tr>
 									))
 								}

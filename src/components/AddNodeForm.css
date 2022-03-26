@@ -131,8 +131,8 @@
 	position: absolute;
 	right: 10px;
 	background-color: red;
-	height: 20px;
-	width: 20px;
+	height: 25px;
+	width: 25px;
 	border-radius: 50%;
 	color: white;
 	display: flex;
@@ -140,11 +140,17 @@
 	align-items: center;
 	font-weight: 700;
 	font-size: 1em;
-	margin-top: 10px;
+	margin-top: 5px;
 	margin-left: 5px;
 	cursor: pointer;
 	visibility: hidden;
 	transition: 0.2s;
+}
+
+.add__node .preview-two .preview-two-container > .flex > .table-container > table > tbody > tr > p.edit{
+	background-color: green;
+	right: 40px;
+	font-size: 0.8em;
 }
 
 .add__node .preview-two .preview-two-container > .flex > .table-container > table > tbody > tr:hover > p{
@@ -276,8 +282,8 @@
 
 .add__node .preview table tr p{
 	background-color: red;
-	height: 20px;
-	width: 20px;
+	height: 25px;
+	width: 25px;
 	border-radius: 50%;
 	color: white;
 	display: flex;
@@ -293,6 +299,12 @@
 	position: absolute;
 	right: 10px;
 	transition: 0.2s;
+}
+
+.add__node .preview table tr p.edit{
+	background-color: green;
+	right: 40px;
+	font-size: 0.8em;
 }
 
 .add__node .preview table tr:hover > p{
