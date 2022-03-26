@@ -3,12 +3,16 @@ import "./Table.css"
 import { Handle, Position } from 'react-flow-renderer';
 import {useDispatch} from 'react-redux'
 import {updateNodeData} from '../actions/form'
+import { hideForm } from '../actions/form'
 
 const CustomTable = ({id, data, type}) => {
 	const dispatch = useDispatch();
 	const handleContextMenu = (e) => {
 		e.preventDefault();
-		dispatch(updateNodeData(id, data.title, data.options, data.headers, type, data.latexFormula))
+		dispatch(hideForm());
+		setTimeout(()=>{
+			dispatch(updateNodeData(id, data.title, data.options, data.headers, type, data.latexFormula))
+		}, 10)
 	}
 
 	return (
