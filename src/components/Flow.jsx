@@ -8,6 +8,8 @@ import {useSelector, useDispatch} from 'react-redux'
 import { createNewEdge } from '../actions/edges'
 import { createNewNode } from '../actions/nodes'
 import {showForm} from '../actions/form'
+import { jsPDF } from "jspdf";
+import html2canvas from 'html2canvas';
 
 const edgeOptions = {
   animated: true,
@@ -69,6 +71,18 @@ const Flow = () => {
     [setEdges]
   );
 
+  const handleExportToPdf = () => {
+    const input = document.querySelector(".react-flow");
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({ unit: "px", userUnit: "px", orientation: "l" });
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        // pdf.output('dataurlnewwindow');
+        pdf.save("download.pdf");
+      })
+  }
+
   return (
     <>
       <ReactFlow
@@ -79,6 +93,7 @@ const Flow = () => {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
+        className="react-flow"
         style={{
           backgroundColor: '#D3D2E5',
         }}
@@ -90,6 +105,9 @@ const Flow = () => {
       </ReactFlow>
       <button onClick={()=> dispatch(showForm())} className="btn-add">
         add node
+      </button>
+      <button onClick={handleExportToPdf} className="download-pdf">
+        Export pdf
       </button>
     </>
   );
